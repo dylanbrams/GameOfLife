@@ -125,7 +125,8 @@ public class LifeMatrix {
             // I could overload this type of array and make a sum function for it.
             // That would be a good step to take to make this chunk of code 'higher quality'
             // I didn't do this for reasons of time, and it could increase the complexity of the
-            // overall design. (The enum allowing for 'partial life')
+            // overall design. (The enum allowing for 'partial life' in the future made this more
+            // complex)
             if (LineBefore != null && j > 0)
                 if(LineBefore[j-1] == LifeStatusEnum.AlivePoint)
                     LifeCountIn++;
@@ -158,7 +159,9 @@ public class LifeMatrix {
     }
 
     // Check whether a cell is alive based upon its input life counts.
-    private LifeStatusEnum CalculateLife(short LifeCountIn){
+    // THIS COULD be separated out into a different class in the future.
+    // (note that it was moved back into this class for simplicity)
+    protected LifeStatusEnum CalculateLife(short LifeCountIn){
         if (1 < LifeCountIn && LifeCountIn < 4)
             return LifeStatusEnum.AlivePoint;
         else
