@@ -25,8 +25,8 @@ public class LifeMatrix {
     public LifeMatrix (int width, int height){
         lmWidth = width;
         lmHeight = height;
-        //fgMatrix = new short[fgWidth][fgHeight];
         lmBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+        lmMatrix = new LifeStatusEnum[lmWidth][lmHeight];
     }
 
     // Get new fullscreen lifeBitmap
@@ -36,12 +36,48 @@ public class LifeMatrix {
         return lfNewGraphic;
     }
 
+    // Simple Set
+    protected boolean SetLifeMatrix (LifeStatusEnum[][] lmMatrixIn){
+        try {
+            lmMatrix = lmMatrixIn;
+            return false;
+        }
+        catch (Exception ex) {
+            throw (ex);
+        }
+    }
+
+    // Simple get
+    protected LifeStatusEnum[][] GetLifeMatrix (){
+        return lmMatrix;
+    }
+
     // Calculate Tick
     public boolean CalcNewTick(){
         tick++;
         Log.d(DEBUG_TAG, "calling this.CalcNewMatrix");
         CalcNewMatrix();
         return false;
+    }
+
+    public boolean CheckEqualMatrix(LifeStatusEnum[][] MatrixIn ){
+        if (MatrixIn.length == lmMatrix.length && MatrixIn[0].length == lmMatrix[0].length)
+        {
+            for (int i = 0; i<lmWidth; i++)
+            {
+                if (MatrixIn[i].length == lmMatrix[i].length){
+                    for (int j=0; j<lmHeight; j++) {
+                        if (MatrixIn[i][j] != lmMatrix[i][j]){
+                            return false;
+                        }
+                    }
+                }
+                else return false;
+            }
+        }
+        else
+            return false;
+        return true;
     }
 
     // This class holds a column of the matrix.
@@ -63,7 +99,6 @@ public class LifeMatrix {
     private void CalcNewMatrix(){
         boolean[] FinishedLineTracker = new boolean[lmWidth];
         List<MatrixColumn> CompletedLines = new ArrayList<MatrixColumn>();
-
         Log.d(DEBUG_TAG, "In CalcNewMatrix; beginning matrix calculation.");
 
         for (int i = 0; i < lmWidth; i++) {
@@ -109,7 +144,7 @@ public class LifeMatrix {
         return false;
     }
 
-    private LifeStatusEnum[] CalcLine(LifeStatusEnum[] LineBefore, LifeStatusEnum[] ThisLine,
+    protected LifeStatusEnum[] CalcLine(LifeStatusEnum[] LineBefore, LifeStatusEnum[] ThisLine,
                                       LifeStatusEnum[] LineAfter, int LineLength){
         LifeStatusEnum[] ReturnLine = new LifeStatusEnum[LineLength];
         // Note: the decision in this for loop could be broken into another function.
@@ -117,52 +152,41 @@ public class LifeMatrix {
         // about it.
         for (int j = 0; j < LineLength; j++) {
             short LifeCountIn = 0;
-            /*
-             * 0 3 6
-             * 1 4 7
-             * 2 5 8
-            */
-            // I could overload this type of array and make a sum function for it.
-            // That would be a good step to take to make this chunk of code 'higher quality'
-            // I didn't do this for reasons of time, and it could increase the complexity of the
-            // overall design. (The enum allowing for 'partial life' in the future made this more
-            // complex)
+            List<LifeStatusEnum> StatusList = new ArrayList<LifeStatusEnum>();
             if (LineBefore != null && j > 0)
-                if(LineBefore[j-1] == LifeStatusEnum.AlivePoint)
-                    LifeCountIn++;
+                    StatusList.add(LineBefore[j-1]);
             if (LineBefore != null)
-                if(LineBefore[j] == LifeStatusEnum.AlivePoint)
-                    LifeCountIn++;
-            if (LineBefore != null && j < lmHeight - 1)
-                if(LineBefore[j+1] == LifeStatusEnum.AlivePoint)
-                    LifeCountIn++;
+                StatusList.add(LineBefore[j]);
+            if (LineBefore != null && j < LineLength - 1)
+                StatusList.add(LineBefore[j+1]);
             if (j>0)
-                if(ThisLine[j-1] == LifeStatusEnum.AlivePoint)
-                    LifeCountIn++;
-            if (ThisLine[j] == LifeStatusEnum.AlivePoint )
-                LifeCountIn++;
+                StatusList.add(ThisLine[j-1]);
             if (j < LineLength - 1)
-                if (ThisLine[j+1] == LifeStatusEnum.AlivePoint)
-                    LifeCountIn++;
-            if (LineAfter != null && j < LineLength - 1)
-                if (LineAfter[j+1] == LifeStatusEnum.AlivePoint)
-                    LifeCountIn++;
+                StatusList.add(ThisLine[j+1]);
+            if (LineAfter != null && j > 0)
+                StatusList.add(LineAfter[j-1]);
             if (LineAfter != null)
-                if (LineAfter[j] == LifeStatusEnum.AlivePoint)
-                    LifeCountIn++;
-            if (LineAfter != null && j < lmHeight - 1)
-                if (LineAfter[j] == LifeStatusEnum.AlivePoint)
-                    LifeCountIn++;
-            ReturnLine[j] = CalculateLife(LifeCountIn);
+                StatusList.add(LineAfter[j]);
+            if (LineAfter != null && j < LineLength - 1)
+                StatusList.add(LineAfter[j+1]);
+            LifeCountIn = CountLife(StatusList);
+            ReturnLine[j] = CalculateLife(LifeCountIn, ThisLine[j]);
         }
         return ReturnLine;
     }
 
+    protected short CountLife (List<LifeStatusEnum> InputList){
+        short returnTotal = 0;
+        for (LifeStatusEnum LS : InputList) {
+            if (LS == LifeStatusEnum.AlivePoint)
+                returnTotal++;
+        }
+        return returnTotal;
+    }
+
     // Check whether a cell is alive based upon its input life counts.
-    // THIS COULD be separated out into a different class in the future.
-    // (note that it was moved back into this class for simplicity)
-    protected LifeStatusEnum CalculateLife(short LifeCountIn){
-        if (1 < LifeCountIn && LifeCountIn < 4)
+    protected LifeStatusEnum CalculateLife(short LifeCountIn, LifeStatusEnum currentLife){
+        if ((LifeCountIn == 2 && currentLife == LifeStatusEnum.AlivePoint) || LifeCountIn == 3)
             return LifeStatusEnum.AlivePoint;
         else
             return LifeStatusEnum.DeadPoint;
