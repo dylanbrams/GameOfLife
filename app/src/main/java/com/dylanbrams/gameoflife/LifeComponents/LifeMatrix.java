@@ -41,6 +41,7 @@ public class LifeMatrix implements LifeMatrixInterface {
     }
 
     @Override
+    // Fill the core matrix based on a random seed.  I chose a 1/3 average fill ratio, randomly.
     public void FillMatrixFromRandomSeed(int RandomSeed) {
         Random generator;
         if (RandomSeed != 0)
@@ -58,9 +59,9 @@ public class LifeMatrix implements LifeMatrixInterface {
         }
     }
 
-    // Get new fullscreen lifeBitmap
+    // Get new fullscreen lifeBitmap, return it.
     @Override
-    public Bitmap GetNewFieldGraphic(){
+    public Bitmap GetNewMatrixGraphic(){
         LifePrint lfPrinter = new LifePrint(lmMatrix);
         return lfPrinter.BMPPrint();
     }

@@ -11,7 +11,7 @@ interface LifeMatrixInterface {
     void FillMatrixFromRandomSeed(int RandomSeed);
 
     // Get new fullscreen lifeBitmap
-    Bitmap GetNewFieldGraphic();
+    Bitmap GetNewMatrixGraphic();
 
     // Calculate Tick.  Call CalcNewMatrix().
     void CalcNewTick();
