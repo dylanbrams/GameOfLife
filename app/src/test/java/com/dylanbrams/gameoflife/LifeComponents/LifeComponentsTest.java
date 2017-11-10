@@ -112,6 +112,7 @@ public class LifeComponentsTest {
         assertFalse(LittleMatrix.CheckEqualMatrix(BlinkerOut));
     }
 
+    @Test
     public void UnitTest_CheckEqualMatrix_FailSizeTwo(){
         PowerMockito.mockStatic(Log.class);
         PowerMockito.mockStatic(android.graphics.Bitmap.class);
@@ -121,9 +122,9 @@ public class LifeComponentsTest {
         LifeStatusEnum BlinkerOut[][] = {{LifeStatusEnum.DeadPoint, LifeStatusEnum.DeadPoint, LifeStatusEnum.DeadPoint},
                                         {LifeStatusEnum.AlivePoint, LifeStatusEnum.AlivePoint},
                                         {LifeStatusEnum.DeadPoint, LifeStatusEnum.DeadPoint, LifeStatusEnum.DeadPoint}};
-    LifeMatrix LittleMatrix = new LifeMatrix(3, 3);
+        LifeMatrix LittleMatrix = new LifeMatrix(3, 3);
         LittleMatrix.SetLifeMatrix(BlinkerIn);
-        assertTrue(LittleMatrix.CheckEqualMatrix(BlinkerOut));
+        assertFalse(LittleMatrix.CheckEqualMatrix(BlinkerOut));
     }
 
     @Test
@@ -140,5 +141,19 @@ public class LifeComponentsTest {
         LittleMatrix.SetLifeMatrix(BlinkerIn);
         LittleMatrix.CalcNewTick();
         assertTrue(LittleMatrix.CheckEqualMatrix(BlinkerOut));
+    }
+
+    public void UnitTest_CalcNewTick_Block() throws Exception{
+        PowerMockito.mockStatic(Log.class);
+        PowerMockito.mockStatic(android.graphics.Bitmap.class);
+        LifeStatusEnum BlockStatic[][] = {
+                {LifeStatusEnum.DeadPoint, LifeStatusEnum.DeadPoint, LifeStatusEnum.DeadPoint, LifeStatusEnum.DeadPoint},
+                {LifeStatusEnum.DeadPoint, LifeStatusEnum.AlivePoint, LifeStatusEnum.AlivePoint, LifeStatusEnum.DeadPoint},
+                {LifeStatusEnum.DeadPoint, LifeStatusEnum.AlivePoint, LifeStatusEnum.AlivePoint, LifeStatusEnum.DeadPoint},
+                {LifeStatusEnum.DeadPoint, LifeStatusEnum.DeadPoint, LifeStatusEnum.DeadPoint, LifeStatusEnum.DeadPoint}};
+        LifeMatrix LittleMatrix = new LifeMatrix(3, 3);
+        LittleMatrix.SetLifeMatrix(BlockStatic);
+        LittleMatrix.CalcNewTick();
+        assertTrue(LittleMatrix.CheckEqualMatrix(BlockStatic));
     }
 }
