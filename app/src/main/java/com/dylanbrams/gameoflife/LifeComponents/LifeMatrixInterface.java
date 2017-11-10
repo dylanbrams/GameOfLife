@@ -7,7 +7,7 @@ import android.graphics.Bitmap;
   Because coding to Interfaces is all flashy and important.
  */
 
-interface LifeMatrixInterface {
+public interface LifeMatrixInterface {
     void FillMatrixFromRandomSeed(int RandomSeed);
 
     // Get new fullscreen lifeBitmap
