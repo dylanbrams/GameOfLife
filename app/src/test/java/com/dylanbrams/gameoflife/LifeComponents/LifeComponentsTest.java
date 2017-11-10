@@ -1,30 +1,17 @@
 package com.dylanbrams.gameoflife.LifeComponents;
 
-/**
- * Created by ThinkPad on 11/10/2017.
+/*
+  Created by Dylan Brams on 11/10/2017.
+  This is the unit test file for the LifeComponents package.
  */
 
 import org.junit.runner.RunWith;
-import android.graphics.Bitmap;
-
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
 import static org.junit.Assert.*;
-
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-
-import android.graphics.Color;
 import android.util.Log;
-
-
-/**
- * Created by ThinkPad on 7/28/2017.
- */
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({android.util.Log.class, android.graphics.Bitmap.class})
@@ -143,6 +130,7 @@ public class LifeComponentsTest {
         assertTrue(LittleMatrix.CheckEqualMatrix(BlinkerOut));
     }
 
+    @Test
     public void UnitTest_CalcNewTick_Block() throws Exception{
         PowerMockito.mockStatic(Log.class);
         PowerMockito.mockStatic(android.graphics.Bitmap.class);
@@ -151,9 +139,22 @@ public class LifeComponentsTest {
                 {LifeStatusEnum.DeadPoint, LifeStatusEnum.AlivePoint, LifeStatusEnum.AlivePoint, LifeStatusEnum.DeadPoint},
                 {LifeStatusEnum.DeadPoint, LifeStatusEnum.AlivePoint, LifeStatusEnum.AlivePoint, LifeStatusEnum.DeadPoint},
                 {LifeStatusEnum.DeadPoint, LifeStatusEnum.DeadPoint, LifeStatusEnum.DeadPoint, LifeStatusEnum.DeadPoint}};
-        LifeMatrix LittleMatrix = new LifeMatrix(3, 3);
+        LifeMatrix LittleMatrix = new LifeMatrix(4, 4);
         LittleMatrix.SetLifeMatrix(BlockStatic);
         LittleMatrix.CalcNewTick();
         assertTrue(LittleMatrix.CheckEqualMatrix(BlockStatic));
+    }
+
+    @Test
+    public void UnitTest_GenerateRandomWithSeed() throws Exception{
+        PowerMockito.mockStatic(Log.class);
+        PowerMockito.mockStatic(android.graphics.Bitmap.class);
+        int RandNum = 12345; // Idiots and luggage and such.
+        LifeStatusEnum RandomExpected[][] = {{LifeStatusEnum.DeadPoint, LifeStatusEnum.DeadPoint, LifeStatusEnum.DeadPoint},
+                                        {LifeStatusEnum.DeadPoint, LifeStatusEnum.DeadPoint, LifeStatusEnum.AlivePoint},
+                                        {LifeStatusEnum.AlivePoint, LifeStatusEnum.AlivePoint, LifeStatusEnum.AlivePoint}};
+        LifeMatrixInterface LittleMatrix = new LifeMatrix(3, 3);
+        LittleMatrix.FillMatrixFromRandomSeed(RandNum);
+        assertTrue(LittleMatrix.CheckEqualMatrix(RandomExpected));
     }
 }
