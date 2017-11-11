@@ -26,26 +26,41 @@ public class LifeMatrix implements LifeMatrixInterface {
 
     private int lmWidth;
     private int lmHeight;
+    private boolean lmInitialized = false;
     private LifeStatusEnum[][] lmMatrix;
     private int tick = 0;
-    private int[] lfCount = new int[3];
+    private int randomSeed = 0;
     private static final String DEBUG_TAG = "Debug, FieldGameField";
     private Bitmap lmBitmap;
 
     // Create A LifeMatrix.  The purpose of
     public LifeMatrix (int width, int height){
+        SetupMatrix(width, height);
+    }
+
+    public LifeMatrix (){
+    }
+
+    public void SetupMatrix(int width, int height){
         lmWidth = width;
         lmHeight = height;
         lmBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
         lmMatrix = new LifeStatusEnum[lmWidth][lmHeight];
     }
 
+    public boolean GetInitialized(){
+        return lmInitialized;
+    }
+
+    public int GetTick() {return tick;}
+    public int GetRandomSeed() {return randomSeed;}
+
     @Override
     // Fill the core matrix based on a random seed.  I chose a 1/3 average fill ratio, randomly.
-    public void FillMatrixFromRandomSeed(int RandomSeed) {
+    public void FillMatrixFromRandomSeed(int randomSeedIn) {
         Random generator;
-        if (RandomSeed != 0)
-            generator = new Random(RandomSeed);
+        if (randomSeedIn != 0)
+            generator = new Random(randomSeedIn);
         else
             generator = new Random();
         for (int i = 0; i < lmWidth; i++){
@@ -57,6 +72,8 @@ public class LifeMatrix implements LifeMatrixInterface {
                     lmMatrix[i][j] = LifeStatusEnum.DeadPoint;
             }
         }
+        randomSeed = randomSeedIn;
+        lmInitialized = true;
     }
 
     // Get new fullscreen lifeBitmap, return it.
@@ -70,9 +87,9 @@ public class LifeMatrix implements LifeMatrixInterface {
     @Override
     public void CalcNewTick(){
         try {
-        tick++;
-        Log.d(DEBUG_TAG, "calling this.CalcNewMatrix");
-        CalcNewMatrix();
+            Log.d(DEBUG_TAG, "calling this.CalcNewMatrix");
+            CalcNewMatrix();
+            tick++;
         }
         catch (Exception ex){
             throw (ex);

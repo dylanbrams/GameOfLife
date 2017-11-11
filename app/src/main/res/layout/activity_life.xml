@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.dylanbrams.gameoflife.LifeActivity">
+
+    <com.dylanbrams.gameoflife.GameOfLifeView
+        android:id="@+id/localLifeView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="#FFFFFF"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"/>
+
+    <TextView
+        android:id="@+id/tvRandomSeed"
+        android:layout_width="74dp"
+        android:layout_height="19dp"
+        android:layout_marginRight="22dp"
+        android:layout_marginTop="20dp"
+        android:text="0"
+        android:textAlignment="textEnd"
+        android:gravity="end"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/tvRandomSeedLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="20dp"
+        android:text="Random Seed:"
+        app:layout_constraintEnd_toStartOf="@+id/tvTickCount"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/tvTickCountLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Tick Number:"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toStartOf="@+id/tvRandomSeed"
+        app:layout_constraintTop_toBottomOf="@+id/tvRandomSeedLabel"
+        />
+
+    <TextView
+        android:id="@+id/tvTickCount"
+        android:layout_width="74dp"
+        android:layout_height="19dp"
+        android:layout_marginRight="22dp"
+        android:layout_marginTop="8dp"
+        android:text="0"
+        android:textAlignment="textEnd"
+        android:gravity="end"
+        android:visibility="invisible"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvRandomSeed"
+        />
+</android.support.constraint.ConstraintLayout>

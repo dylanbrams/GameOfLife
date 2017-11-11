@@ -46,11 +46,7 @@ public class LifePrint {
         }
         long millis = System.currentTimeMillis() - startTime;
         Log.d(DEBUG_TAG, "Put all lines into BMP array. Time taken, MS: " + Long.toString(millis));
-        BMPOutput = CallBMPGenerate(BMPArray, imageWidth, imageHeight);
-        millis = System.currentTimeMillis() - startTime;
-        Log.d(DEBUG_TAG, "Created bitmap. Total BMPPrint Execution Time, MS: " +
-                         Long.toString(millis));
-        return BMPOutput;
+        return CallBMPGenerate(BMPArray, imageWidth, imageHeight);
     }
 
 

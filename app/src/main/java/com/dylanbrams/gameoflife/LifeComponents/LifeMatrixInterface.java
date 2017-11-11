@@ -10,6 +10,11 @@ import android.graphics.Bitmap;
 public interface LifeMatrixInterface {
     void FillMatrixFromRandomSeed(int RandomSeed);
 
+    void SetupMatrix(int width, int height);
+
+    boolean GetInitialized();
+    int GetTick();
+    int GetRandomSeed();
     // Get new fullscreen lifeBitmap
     Bitmap GetNewMatrixGraphic();
 
