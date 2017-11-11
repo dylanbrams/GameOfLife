@@ -9,6 +9,10 @@ The user interface could use a ton of work.
 
 ToDo:
 1. Unit Tests for the Bitmap generation functions.
+
+1.25 Horrible thread stacking things happen when you use the back button and go back and forth
+    between the InitMenu and the GameOfLifeView. 
+    
 1.5 Tests for Android platforms beyond the five I have locally installed (Nexus / Samsung).
 2. Figure out how to get a Tick Count to work.
 3. Backgrounds on the overlay labels

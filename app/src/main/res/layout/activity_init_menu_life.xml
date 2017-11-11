@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.dylanbrams.gameoflife.InitMenuLife">
+    tools:context="com.dylanbrams.gameoflife.InitMenuActivity">
 
     <TextView
         android:id="@+id/textView"
@@ -20,22 +20,13 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.014"/>
 
-    <EditText
-        android:id="@+id/randomSeedInput"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="number"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        tools:layout_editor_absoluteX="122dp"/>
-
     <TextView
         android:id="@+id/tvBlankForRandom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="(blank for randomized seed)"
-        app:layout_constraintTop_toBottomOf="@+id/randomSeedInput"
+        app:layout_constraintTop_toBottomOf="@+id/etRandomSeed"
         tools:layout_editor_absoluteX="6dp"/>
 
     <Button
@@ -43,12 +34,19 @@
         android:layout_width="353dp"
         android:layout_height="330dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="8dp"
         android:onClick="openGameOfLife"
         android:text="I HEREBY MAKE LIFE"
         android:textSize="30sp"
         android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvBlankForRandom"/>
+    <EditText
+        android:id="@+id/etRandomSeed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:ems="10" android:inputType="number"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        tools:layout_editor_absoluteX="6dp"/>
 
 </android.support.constraint.ConstraintLayout>

@@ -3,6 +3,7 @@ package com.dylanbrams.gameoflife;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.ViewTreeObserver;
+import android.widget.TextView;
 
 import com.dylanbrams.gameoflife.LifeComponents.LifeMatrix;
 
@@ -20,6 +21,7 @@ public class LifeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        final Integer randSeed = getIntent().getIntExtra("RANDOM_SEED", 0);
         setContentView(R.layout.activity_life);
         localLifeView = findViewById(R.id.localLifeView);
         // create a LifeMatrixInterface for the child View to use.  It's easier to do this here.
@@ -34,8 +36,11 @@ public class LifeActivity extends AppCompatActivity {
                 int height = localLifeView.getHeight();
                 int width = localLifeView.getWidth();
                 if (!localLifeView.thisLifeMatrixInterface.GetInitialized()) {
+                    TextView tvRandSeed = findViewById(R.id.tvRandomSeed);
                     localLifeView.thisLifeMatrixInterface.SetupMatrix(width, height);
-                    localLifeView.thisLifeMatrixInterface.FillMatrixFromRandomSeed(0);
+                    localLifeView.thisLifeMatrixInterface.FillMatrixFromRandomSeed(randSeed);
+                    tvRandSeed.setText(((Integer)localLifeView
+                            .thisLifeMatrixInterface.GetRandomSeed()).toString());
                 }
                 return true;
             }

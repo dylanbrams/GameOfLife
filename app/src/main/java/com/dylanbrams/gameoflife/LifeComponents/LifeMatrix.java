@@ -61,10 +61,14 @@ public class LifeMatrix implements LifeMatrixInterface {
     // Set isInitialized, because the matrix is now ready to tick.
     public void FillMatrixFromRandomSeed(int randomSeedIn) {
         Random generator;
-        if (randomSeedIn != 0)
-            generator = new Random(randomSeedIn);
-        else
-            generator = new Random();
+        Integer mySeed = randomSeedIn;
+        if (mySeed != 0)
+            generator = new Random(mySeed);
+        else {
+            Random gimmieGen = new Random();
+            mySeed = gimmieGen.nextInt();
+            generator = new Random(mySeed);
+        }
         for (int i = 0; i < lmWidth; i++){
             for (int j = 0; j < lmHeight; j++){
                 int randnum = generator.nextInt();
@@ -74,7 +78,7 @@ public class LifeMatrix implements LifeMatrixInterface {
                     lmMatrix[i][j] = LifeStatusEnum.DeadPoint;
             }
         }
-        randomSeed = randomSeedIn;
+        randomSeed = mySeed;
         lmInitialized = true;
     }
 

@@ -4,10 +4,9 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 
-import com.dylanbrams.gameoflife.LifeComponents.LifeMatrix;
-
-public class InitMenuLife extends AppCompatActivity {
+public class InitMenuActivity extends AppCompatActivity {
 
     private static final boolean AUTO_HIDE = true;
     private View mContentView;
@@ -22,7 +21,17 @@ public class InitMenuLife extends AppCompatActivity {
 
     public void openGameOfLife(View View)
     {
-        Intent intent = new Intent(InitMenuLife.this, LifeActivity.class);
+        EditText mEdit = (EditText)findViewById(R.id.etRandomSeed);
+        Integer intRandInput = 0;
+        try{
+            intRandInput = Integer.parseInt( mEdit.getText().toString());}
+        catch (Exception ex) {
+            intRandInput = 0;
+        }
+
+        Intent intent = new Intent(InitMenuActivity.this, LifeActivity.class);
+
+        intent.putExtra("RANDOM_SEED", intRandInput);
         startActivity(intent);
     }
 }
