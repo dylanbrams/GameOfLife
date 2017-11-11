@@ -6,7 +6,8 @@ import android.util.Log;
 import java.util.Timer;
 
 /**
- * Created by ThinkPad on 11/9/2017.
+ * Created by Dylan Brams on 11/9/2017
+ * Returns a bitmap from a matrix.  Alive is black, dead is white.
  */
 
 public class LifePrint {
@@ -26,7 +27,7 @@ public class LifePrint {
         BMPOutput = null;
     }
 
-    // Converts the
+    // Converts the matrix to black and white from alive and dead.
     Bitmap BMPPrint() {
         int k = 0;
         int BMPArray[] = new int[imageWidth * imageHeight + 1];
@@ -49,7 +50,7 @@ public class LifePrint {
         return CallBMPGenerate(BMPArray, imageWidth, imageHeight);
     }
 
-
+    // The system call is on its own in the corner because it has been bad.
     private Bitmap CallBMPGenerate(int[] ArrayIn, int imageWidthIn, int imageHeightIn) {
         try {
             return Bitmap.createBitmap(ArrayIn, imageWidthIn, imageHeightIn, Bitmap.Config.RGB_565);

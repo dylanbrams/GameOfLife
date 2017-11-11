@@ -4,7 +4,7 @@ import android.graphics.Bitmap;
 
 /*
   Created by Dylan Brams on 11/10/2017.
-  Because coding to Interfaces is all flashy and important.
+  This is an interface that defines the interactions allowed by LifeMatrix objects.
  */
 
 public interface LifeMatrixInterface {

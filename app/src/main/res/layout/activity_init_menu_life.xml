@@ -44,10 +44,10 @@
         android:layout_height="330dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="8dp"
-        android:text="I CREATE LIFE"
+        android:onClick="openGameOfLife"
+        android:text="I HEREBY MAKE LIFE"
         android:textSize="30sp"
         android:textStyle="bold"
-        android:onClick="openGameOfLife"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvBlankForRandom"/>
 

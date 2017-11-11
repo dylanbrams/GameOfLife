@@ -19,6 +19,9 @@ import java.util.Random;
  *
  * I have set up an enum, "LifeStatusEnum," instead of using raw values.  This was too much
  * complexity (which compounded) unless future versions need to include multiple levels of life.
+ *
+ * Note that some functions are 'protected' instead of 'private' so that Android Studio can test them
+ * with unit testing.
  */
 
 
@@ -26,14 +29,12 @@ public class LifeMatrix implements LifeMatrixInterface {
 
     private int lmWidth;
     private int lmHeight;
-    private boolean lmInitialized = false;
+    private boolean lmInitialized = false; // Whether or not the matrix is ready to tick.
     private LifeStatusEnum[][] lmMatrix;
     private int tick = 0;
-    private int randomSeed = 0;
+    private int randomSeed = 0; // Random number seed for the matrix.
     private static final String DEBUG_TAG = "Debug, FieldGameField";
-    private Bitmap lmBitmap;
 
-    // Create A LifeMatrix.  The purpose of
     public LifeMatrix (int width, int height){
         SetupMatrix(width, height);
     }
@@ -41,22 +42,23 @@ public class LifeMatrix implements LifeMatrixInterface {
     public LifeMatrix (){
     }
 
+    // Initialize the matrix to a particular size, set up that size in local vars.
     public void SetupMatrix(int width, int height){
         lmWidth = width;
         lmHeight = height;
-        lmBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
         lmMatrix = new LifeStatusEnum[lmWidth][lmHeight];
     }
 
+    // Various Get functions to maintain encapsulation for private variables.
     public boolean GetInitialized(){
         return lmInitialized;
     }
-
     public int GetTick() {return tick;}
     public int GetRandomSeed() {return randomSeed;}
 
     @Override
-    // Fill the core matrix based on a random seed.  I chose a 1/3 average fill ratio, randomly.
+    // Fill the core matrix based on a random seed or no seed.  I chose a 1/3 average fill ratio.
+    // Set isInitialized, because the matrix is now ready to tick.
     public void FillMatrixFromRandomSeed(int randomSeedIn) {
         Random generator;
         if (randomSeedIn != 0)
@@ -100,6 +102,7 @@ public class LifeMatrix implements LifeMatrixInterface {
     // Was not very necessary except for testing.
     @Override
     public boolean CheckEqualMatrix(LifeStatusEnum[][] MatrixIn){
+        // Step one was always to check matrix sizes for equivalency.
         if (MatrixIn.length == lmMatrix.length && MatrixIn[0].length == lmMatrix[0].length)
         {
             for (int i = 0; i<lmWidth; i++)
@@ -135,6 +138,7 @@ public class LifeMatrix implements LifeMatrixInterface {
     }
 
     // This class holds a column of the matrix.
+    // Necessary for reasons to be explained later.
     private class MatrixColumn{
         public LifeStatusEnum[] myLine;
         public int myIndex;
@@ -147,9 +151,9 @@ public class LifeMatrix implements LifeMatrixInterface {
     // Calc the Matrix column-by-column and progressively add each column back into
     // the original matrix after calculation.  This is done for memory-compression purposes;
     // Android doesn't allow
-    // for applications to use much memory, and full-screen bitmaps (and matricies representing
+    // for applications that use much memory, and full-screen bitmaps (and matricies representing
     // them) use copious amounts. I can't minimize the size of the bitmap memory, but this reduces
-    // the footprint of the matrix.
+    // the footprint of the matrix when calculating it anew.
     private void CalcNewMatrix(){
         boolean[] FinishedLineTracker = new boolean[lmWidth];
         List<MatrixColumn> CompletedLines = new ArrayList<>();

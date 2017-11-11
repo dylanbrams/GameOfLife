@@ -6,8 +6,15 @@ import android.view.ViewTreeObserver;
 
 import com.dylanbrams.gameoflife.LifeComponents.LifeMatrix;
 
+/*
+    Created by Dylan Brams, 11/11/2017
+    This activity holds the GameOfLife View.  It has no interactivity.
+    The only interesting thing it does is fish out the size of the window Android has created for
+    the GameOfLife view contained inside of it, then set up the Game of Life View and LifeMatrix
+    (limited by the interface) required by its child.
+    It does this with a listener, because things which should not be interesting sometimes are in Java.
+ */
 public class LifeActivity extends AppCompatActivity {
-    private static final int tick_length = 1500;
     private GameOfLifeView localLifeView;
 
     @Override
@@ -15,6 +22,7 @@ public class LifeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_life);
         localLifeView = findViewById(R.id.localLifeView);
+        // create a LifeMatrixInterface for the child View to use.  It's easier to do this here.
         localLifeView.thisLifeMatrixInterface = new LifeMatrix();
         // After the size is determined, before the drawing happens, get the size and plug it into
         // the Life Matrix.
@@ -27,7 +35,7 @@ public class LifeActivity extends AppCompatActivity {
                 int width = localLifeView.getWidth();
                 if (!localLifeView.thisLifeMatrixInterface.GetInitialized()) {
                     localLifeView.thisLifeMatrixInterface.SetupMatrix(width, height);
-
+                    localLifeView.thisLifeMatrixInterface.FillMatrixFromRandomSeed(0);
                 }
                 return true;
             }
