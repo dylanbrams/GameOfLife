@@ -8,8 +8,10 @@
     tools:context="com.dylanbrams.gameoflife.InitMenuLife">
 
     <TextView
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:text="Input the Random Seed (int) You Want to Use"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.051"
@@ -24,26 +26,29 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="number"
-        tools:layout_editor_absoluteX="7dp"
-        tools:layout_editor_absoluteY="41dp"/>
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        tools:layout_editor_absoluteX="122dp"/>
 
     <TextView
         android:id="@+id/tvBlankForRandom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:text="(blank for randomized seed)"
-        tools:layout_editor_absoluteX="6dp"
-        tools:layout_editor_absoluteY="96dp"/>
+        app:layout_constraintTop_toBottomOf="@+id/randomSeedInput"
+        tools:layout_editor_absoluteX="6dp"/>
 
     <Button
         android:id="@+id/btnCreateLife"
         android:layout_width="353dp"
         android:layout_height="330dp"
         android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
         android:text="I CREATE LIFE"
         android:textSize="30sp"
         android:textStyle="bold"
+        android:onClick="openGameOfLife"
         app:layout_constraintLeft_toLeftOf="parent"
-        tools:layout_editor_absoluteY="130dp"/>
+        app:layout_constraintTop_toBottomOf="@+id/tvBlankForRandom"/>
 
 </android.support.constraint.ConstraintLayout>
