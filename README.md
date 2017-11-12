@@ -12,6 +12,7 @@ StructureNotes.md has a basic rundown of the project structure.
 
 Please note that this is a program in Java, so it is fairly heavy in a few ways.
 
+The development environment I have used is Android Studio 3.0; the version as of 11/12/2017
 
 ToDo:
 1. Unit Tests for the Bitmap generation functions.
