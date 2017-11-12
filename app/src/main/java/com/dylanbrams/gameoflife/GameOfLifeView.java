@@ -4,11 +4,9 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
-import android.renderscript.RenderScript;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceView;
-import android.widget.TextView;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -48,7 +46,7 @@ import com.dylanbrams.gameoflife.LifeComponents.LifeMatrixInterface;
 public class GameOfLifeView extends SurfaceView {
     private static final String DEBUG_TAG = "DebugTests, GOLView"; // Debug tag for logging
     private BitmapDrawable currentBackground = null; // the background of the View.
-    volatile boolean background_updated = false; // Whether the background has been updated
+    volatile boolean backgroundUpdated = false; // Whether the background has been updated
         // NOTE THAT THIS ^^ is a performance check for the future.  If the ticks speed up Android
         // will not handle the calculations on my laptop (and therefore phone) so bitmaps shouldn't
         // be generated continuously.
@@ -82,7 +80,7 @@ public class GameOfLifeView extends SurfaceView {
                                             "calling thisLifeMatrixInterface.getNewMatrixGraphic");
                                     currentBackground = new BitmapDrawable(getResources(),
                                             thisLifeMatrixInterface.getNewMatrixGraphic());
-                                    background_updated = false;
+                                    backgroundUpdated = false;
                                     postInvalidate(); // Put a redraw into the queue.
                                     Log.d(DEBUG_TAG, "Life bitmap ready for drawing. Calctime since thread start: " +
                                             Long.toString(System.currentTimeMillis() - startTimeMillis));
@@ -131,7 +129,7 @@ public class GameOfLifeView extends SurfaceView {
         Log.d(DEBUG_TAG, "Canvas onDraw");
         if (currentBackground != null) {
             setBackground(currentBackground);
-            background_updated = true;
+            backgroundUpdated = true;
             // I'd like to implement this in the future.  It's more complicated than it looked.
             //TextView tickCount = findViewById(R.id.tvTickCount);
         }

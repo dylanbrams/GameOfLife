@@ -5,7 +5,13 @@ This is an implementation of Conway's Game of Life simulation.
 It takes the screen size available to it and fills it with 1/3 live pixels, based upon a
 user-input random number.  It then calculates the next tick repeatedly.
 
-The user interface could use a ton of work.  
+The user interface was not the point of the exercise, but ended up being a lot of the work.
+  Some of the code written for it was inherited from elsewhere and will be used there eventually.
+
+StructureNotes.md has a basic rundown of the project structure.
+
+Please note that this is a program in Java, so it is fairly heavy in a few ways.
+
 
 ToDo:
 1. Unit Tests for the Bitmap generation functions.
