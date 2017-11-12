@@ -20,11 +20,19 @@ ToDo:
     between the InitMenu and the GameOfLifeView. 
     
 1.5 Tests for Android platforms beyond the five I have locally installed (Nexus / Samsung).
+
 1.75 Get a better code standards Linter and get that linter to work.
+
 2. Figure out how to get a Tick Count to work.
+
 3. Backgrounds on the overlay labels
+
 4. Zooming in / out
+
 5. Tapping on the screen
+
 6. More randomization options
+
 7. Performance enhancements (This is a memory elephant, and I want it to not be such)
+
 8. Put an interface on top of GameOfLifeView
