@@ -12,16 +12,18 @@ public interface LifeMatrixInterface {
 
     void SetupMatrix(int width, int height);
 
-    boolean GetInitialized();
-    int GetTick();
-    int GetRandomSeed();
+    boolean getCalculationActive();
+    void setBoolStopWorking(boolean stopWorkingIn);
+    boolean getInitialized();
+    int getTick();
+    int getRandomSeed();
     // Get new fullscreen lifeBitmap
-    Bitmap GetNewMatrixGraphic();
+    Bitmap getNewMatrixGraphic();
 
     // Calculate Tick.  Call CalcNewMatrix().
-    void CalcNewTick();
+    void calcNewTick();
 
     // Check equivalency of an input life matrix with the current life matrix.
     // Was not very necessary except for testing.
-    boolean CheckEqualMatrix(LifeStatusEnum[][] MatrixIn);
+    boolean checkEqualMatrix(LifeStatusEnum[][] MatrixIn);
 }

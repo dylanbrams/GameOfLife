@@ -68,7 +68,7 @@ public class LifeComponentsTest {
                                         {LifeStatusEnum.DeadPoint, LifeStatusEnum.AlivePoint, LifeStatusEnum.DeadPoint}};
         LifeMatrix LittleMatrix = new LifeMatrix(3, 3);
         LittleMatrix.SetLifeMatrix(BlinkerIn);
-        assertTrue(LittleMatrix.CheckEqualMatrix(BlinkerIn));
+        assertTrue(LittleMatrix.checkEqualMatrix(BlinkerIn));
     }
 
     @Test
@@ -83,7 +83,7 @@ public class LifeComponentsTest {
                                          {LifeStatusEnum.DeadPoint, LifeStatusEnum.DeadPoint, LifeStatusEnum.DeadPoint}};
         LifeMatrix LittleMatrix = new LifeMatrix(3, 3);
         LittleMatrix.SetLifeMatrix(BlinkerIn);
-        assertFalse(LittleMatrix.CheckEqualMatrix(BlinkerOut));
+        assertFalse(LittleMatrix.checkEqualMatrix(BlinkerOut));
     }
 
     @Test
@@ -96,7 +96,7 @@ public class LifeComponentsTest {
         LifeStatusEnum BlinkerOut[][] = {{LifeStatusEnum.DeadPoint, LifeStatusEnum.DeadPoint, LifeStatusEnum.DeadPoint}};
         LifeMatrix LittleMatrix = new LifeMatrix(3, 3);
         LittleMatrix.SetLifeMatrix(BlinkerIn);
-        assertFalse(LittleMatrix.CheckEqualMatrix(BlinkerOut));
+        assertFalse(LittleMatrix.checkEqualMatrix(BlinkerOut));
     }
 
     @Test
@@ -111,7 +111,7 @@ public class LifeComponentsTest {
                                         {LifeStatusEnum.DeadPoint, LifeStatusEnum.DeadPoint, LifeStatusEnum.DeadPoint}};
         LifeMatrix LittleMatrix = new LifeMatrix(3, 3);
         LittleMatrix.SetLifeMatrix(BlinkerIn);
-        assertFalse(LittleMatrix.CheckEqualMatrix(BlinkerOut));
+        assertFalse(LittleMatrix.checkEqualMatrix(BlinkerOut));
     }
 
     @Test
@@ -126,8 +126,8 @@ public class LifeComponentsTest {
                                         {LifeStatusEnum.DeadPoint, LifeStatusEnum.DeadPoint, LifeStatusEnum.DeadPoint}};
         LifeMatrix LittleMatrix = new LifeMatrix(3, 3);
         LittleMatrix.SetLifeMatrix(BlinkerIn);
-        LittleMatrix.CalcNewTick();
-        assertTrue(LittleMatrix.CheckEqualMatrix(BlinkerOut));
+        LittleMatrix.calcNewTick();
+        assertTrue(LittleMatrix.checkEqualMatrix(BlinkerOut));
     }
 
     @Test
@@ -141,8 +141,8 @@ public class LifeComponentsTest {
                 {LifeStatusEnum.DeadPoint, LifeStatusEnum.DeadPoint, LifeStatusEnum.DeadPoint, LifeStatusEnum.DeadPoint}};
         LifeMatrix LittleMatrix = new LifeMatrix(4, 4);
         LittleMatrix.SetLifeMatrix(BlockStatic);
-        LittleMatrix.CalcNewTick();
-        assertTrue(LittleMatrix.CheckEqualMatrix(BlockStatic));
+        LittleMatrix.calcNewTick();
+        assertTrue(LittleMatrix.checkEqualMatrix(BlockStatic));
     }
 
     @Test
@@ -155,6 +155,6 @@ public class LifeComponentsTest {
                                         {LifeStatusEnum.AlivePoint, LifeStatusEnum.AlivePoint, LifeStatusEnum.AlivePoint}};
         LifeMatrixInterface LittleMatrix = new LifeMatrix(3, 3);
         LittleMatrix.FillMatrixFromRandomSeed(RandNum);
-        assertTrue(LittleMatrix.CheckEqualMatrix(RandomExpected));
+        assertTrue(LittleMatrix.checkEqualMatrix(RandomExpected));
     }
 }

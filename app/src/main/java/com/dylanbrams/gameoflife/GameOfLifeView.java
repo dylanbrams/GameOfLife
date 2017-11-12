@@ -1,13 +1,10 @@
 package com.dylanbrams.gameoflife;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Handler;
-import android.text.TextPaint;
+import android.renderscript.RenderScript;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceView;
@@ -37,13 +34,17 @@ import com.dylanbrams.gameoflife.LifeComponents.LifeMatrixInterface;
  *
  * Functions:
  *  Constructor - Nothing special.  Starts the clock.
- *  Timer instance - Starts a thread that calls the interface's CalcNewTick, then invalidates
+ *  Timer instance - Starts a thread that calls the interface's calcNewTick, then invalidates
  *      the current background
  *  OnDraw - Spawned when the current background is invalidated.  Replaces current background with
  *      a BitmapDrawable.  In the future, the background could be moved and zoomed.  I don't know
  *      how to do this.
  *  InitDrawMatrix - Draws the background after initiation of the program.
+ *  StopCalculation - Stop all threads and calculation within them, including inside the matrix.
+ *      This will interrupt ongoing calculations, so should not be used except upon destruction
+ *      of the view.
  */
+
 public class GameOfLifeView extends SurfaceView {
     private static final String DEBUG_TAG = "DebugTests, GOLView"; // Debug tag for logging
     private BitmapDrawable currentBackground = null; // the background of the View.
@@ -51,49 +52,72 @@ public class GameOfLifeView extends SurfaceView {
         // NOTE THAT THIS ^^ is a performance check for the future.  If the ticks speed up Android
         // will not handle the calculations on my laptop (and therefore phone) so bitmaps shouldn't
         // be generated continuously.
-    LifeMatrixInterface thisLifeMatrixInterface;
+    public LifeMatrixInterface thisLifeMatrixInterface;
     Timer timer = new Timer(false);
     Handler timerHandler = new Handler();
     private long startTimeMillis; // Initial system time when matrix starts calculating
     private static final int tick_length = 3000; // How long between calculations.  Playing with
                 // this will cause GC issues.
 
-    // Create a timerTask.  It's a runnable that
+    volatile boolean boolStop = false;
+    // Create a timerTask.  It's a runnable that does one tick cycle calculation.
     TimerTask timerTask = new TimerTask() {
         @Override
         public void run() {
             timerHandler.post(new Runnable() {
                 @Override
                 public void run() {
+                    Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
                     long runTimeCurrent = System.currentTimeMillis() - startTimeMillis;
                     Log.d(DEBUG_TAG, "Entering Calc New Tick.  Runtime: " +
                                      Long.toString(runTimeCurrent));
                     // This thread calculates a matrix graphic.
                     new Thread(new Runnable() {
                         public void run() {
-                            if (thisLifeMatrixInterface.GetInitialized()) {
-                                thisLifeMatrixInterface.CalcNewTick();
-                                Log.d(DEBUG_TAG, "calling thisLifeMatrixInterface.GetNewMatrixGraphic");
-                                currentBackground = new BitmapDrawable(getResources(),
-                                        thisLifeMatrixInterface.GetNewMatrixGraphic());
-                                background_updated = false;
+
+                            if (!thisLifeMatrixInterface.getCalculationActive()) {
+                                if (thisLifeMatrixInterface.getInitialized()) {
+                                    thisLifeMatrixInterface.calcNewTick();
+                                    Log.d(DEBUG_TAG,
+                                            "calling thisLifeMatrixInterface.getNewMatrixGraphic");
+                                    currentBackground = new BitmapDrawable(getResources(),
+                                            thisLifeMatrixInterface.getNewMatrixGraphic());
+                                    background_updated = false;
+                                    postInvalidate(); // Put a redraw into the queue.
+                                    Log.d(DEBUG_TAG, "Life bitmap ready for drawing. Calctime since thread start: " +
+                                            Long.toString(System.currentTimeMillis() - startTimeMillis));
+                                }
                             }
+                            else
+                                Log.d(DEBUG_TAG, "Calculation thread interrupted or overloaded.");
                         }
                     }).start();
-                    postInvalidate(); // Put a redraw into the queue.
-                    Log.d(DEBUG_TAG, "Life drawn with bitmap on background. Calctime: " +
-                        Long.toString(System.currentTimeMillis() - runTimeCurrent - startTimeMillis));
                 }
             });
         }
     };
 
+    public void initializeLifeMatrixInterface(int widthIn, int heightIn, int randSeedIn){
+        if (!thisLifeMatrixInterface.getInitialized()) {
+            thisLifeMatrixInterface.SetupMatrix(widthIn, heightIn);
+            thisLifeMatrixInterface.FillMatrixFromRandomSeed(randSeedIn);
+        }
+        else
+            Log.d(DEBUG_TAG, "Attempt to re-initialize Life Matrix when it already existed.");
+    }
+
+    // Stop calculations being done by the processing threads.
+    public void stopCalculation(){
+        this.thisLifeMatrixInterface.setBoolStopWorking(true);
+        timer.cancel();
+        timer.purge();
+    }
     // Simple constructor.
     public GameOfLifeView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(attrs, 0);
         startTimeMillis = System.currentTimeMillis();
-        timer.schedule(timerTask, 3000, tick_length); // 1000 = 1 second.
+        timer.schedule(timerTask, 100, tick_length); // 1000 = 1 second.
     }
 
     // Android Generated.
@@ -111,7 +135,7 @@ public class GameOfLifeView extends SurfaceView {
             // I'd like to implement this in the future.  It's more complicated than it looked.
             //TextView tickCount = findViewById(R.id.tvTickCount);
         }
-        else if (!thisLifeMatrixInterface.GetInitialized()){
+        else if (!thisLifeMatrixInterface.getInitialized()){
             InitDrawMatrix();
         }
     }
@@ -122,8 +146,10 @@ public class GameOfLifeView extends SurfaceView {
             public void run() {
                 Log.d(DEBUG_TAG, "Drawing Life Matrix for the first time.");
                 currentBackground = new BitmapDrawable(getResources(),
-                        thisLifeMatrixInterface.GetNewMatrixGraphic());
+                        thisLifeMatrixInterface.getNewMatrixGraphic());
             }
         }).start();
     }
+
+
 }

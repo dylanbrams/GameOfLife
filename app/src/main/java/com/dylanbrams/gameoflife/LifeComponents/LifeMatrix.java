@@ -32,8 +32,10 @@ public class LifeMatrix implements LifeMatrixInterface {
     private boolean lmInitialized = false; // Whether or not the matrix is ready to tick.
     private LifeStatusEnum[][] lmMatrix;
     private int tick = 0;
-    private int randomSeed = 0; // Random number seed for the matrix.
+    private int intRandomSeed = 0; // Random number seed for the matrix.
     private static final String DEBUG_TAG = "Debug, FieldGameField";
+    private volatile boolean boolCalculationActive = false;
+    private volatile boolean boolStopWorking = false;
 
     public LifeMatrix (int width, int height){
         SetupMatrix(width, height);
@@ -50,11 +52,19 @@ public class LifeMatrix implements LifeMatrixInterface {
     }
 
     // Various Get functions to maintain encapsulation for private variables.
-    public boolean GetInitialized(){
+    public boolean getInitialized(){
         return lmInitialized;
     }
-    public int GetTick() {return tick;}
-    public int GetRandomSeed() {return randomSeed;}
+    public int getTick() {return tick;}
+    public int getRandomSeed() {return intRandomSeed;}
+
+    public boolean getCalculationActive (){
+        return boolCalculationActive;
+    }
+
+    public void setBoolStopWorking( boolean stopWorkingIn){
+        boolStopWorking = stopWorkingIn;
+    }
 
     @Override
     // Fill the core matrix based on a random seed or no seed.  I chose a 1/3 average fill ratio.
@@ -78,20 +88,20 @@ public class LifeMatrix implements LifeMatrixInterface {
                     lmMatrix[i][j] = LifeStatusEnum.DeadPoint;
             }
         }
-        randomSeed = mySeed;
+        intRandomSeed = mySeed;
         lmInitialized = true;
     }
 
     // Get new fullscreen lifeBitmap, return it.
     @Override
-    public Bitmap GetNewMatrixGraphic(){
+    public Bitmap getNewMatrixGraphic(){
         LifePrint lfPrinter = new LifePrint(lmMatrix);
         return lfPrinter.BMPPrint();
     }
 
     // Calculate Tick.  Call CalcNewMatrix().
     @Override
-    public void CalcNewTick(){
+    public void calcNewTick(){
         try {
             Log.d(DEBUG_TAG, "calling this.CalcNewMatrix");
             CalcNewMatrix();
@@ -105,7 +115,7 @@ public class LifeMatrix implements LifeMatrixInterface {
     // Check equivalency of an input life matrix with the current life matrix.
     // Was not very necessary except for testing.
     @Override
-    public boolean CheckEqualMatrix(LifeStatusEnum[][] MatrixIn){
+    public boolean checkEqualMatrix(LifeStatusEnum[][] MatrixIn){
         // Step one was always to check matrix sizes for equivalency.
         if (MatrixIn.length == lmMatrix.length && MatrixIn[0].length == lmMatrix[0].length)
         {
@@ -158,37 +168,50 @@ public class LifeMatrix implements LifeMatrixInterface {
     // for applications that use much memory, and full-screen bitmaps (and matricies representing
     // them) use copious amounts. I can't minimize the size of the bitmap memory, but this reduces
     // the footprint of the matrix when calculating it anew.
+    // The memory used here is insignificant in comparison to the memory spreading out all over
+    // the place.  To do effective calculation my conclusion is  large portions of the application
+    // need to be moved out of Java, or someone who knows Android internals better would be necessary.
     private void CalcNewMatrix(){
         boolean[] FinishedLineTracker = new boolean[lmWidth];
+        boolean FinishedCalculating = false;
         List<MatrixColumn> CompletedLines = new ArrayList<>();
         Log.d(DEBUG_TAG, "In CalcNewMatrix; beginning matrix calculation.");
+        try {
+            boolCalculationActive = true;
+            for (int i = 0; i < lmWidth; i++) {
+                if (boolStopWorking) // Break if the thread has been cancelled.
+                    break;
+                // Calc one line of the final matrix.
+                if (i == 0)
+                    CompletedLines.add(new MatrixColumn(i,
+                            CalcLine(null, lmMatrix[i], lmMatrix[i + 1], lmHeight)));
+                else if (i == lmWidth - 1)
+                    CompletedLines.add(new MatrixColumn(i,
+                            CalcLine(lmMatrix[i - 1], lmMatrix[i], null, lmHeight)));
+                else
+                    CompletedLines.add(new MatrixColumn(i,
+                            CalcLine(lmMatrix[i - 1], lmMatrix[i], lmMatrix[i + 1], lmHeight)));
+                FinishedLineTracker[i] = true;
 
-        for (int i = 0; i < lmWidth; i++) {
-
-            // Calc one line of the final matrix.
-            if (i == 0) {
-                CompletedLines.add(new MatrixColumn(i,
-                        CalcLine(null, lmMatrix[i], lmMatrix[i + 1], lmHeight)));
-            }
-            else if (i == lmWidth-1)
-                CompletedLines.add(new MatrixColumn(i,
-                        CalcLine(lmMatrix[i-1], lmMatrix[i], null, lmHeight)));
-            else
-                CompletedLines.add(new MatrixColumn(i,
-                        CalcLine(lmMatrix[i-1], lmMatrix[i], lmMatrix[i+1], lmHeight)));
-            FinishedLineTracker[i] = true;
-            // Iterate through the completed lines not yet in the matrix, put them in if the lines
-            // before and after have been finished.
-            for (Iterator<MatrixColumn> iterator = CompletedLines.iterator(); iterator.hasNext();) {
-                MatrixColumn currentCol = iterator.next();
-                if (CheckLineCalculated(FinishedLineTracker, currentCol.myIndex)) {
-                    // Remove the current element from the iterator and the list.
-                    lmMatrix[currentCol.myIndex] = currentCol.myLine;
-                    iterator.remove();
+                // Iterate through the completed lines not yet in the matrix, put them in if the lines
+                // before and after have been finished.
+                for (Iterator<MatrixColumn> iterator = CompletedLines.iterator();
+                        iterator.hasNext(); ) {
+                    MatrixColumn currentCol = iterator.next();
+                    if (CheckLineCalculated(FinishedLineTracker, currentCol.myIndex)) {
+                        // Remove the current element from the iterator and the list.
+                        lmMatrix[currentCol.myIndex] = currentCol.myLine;
+                        iterator.remove();
+                    }
                 }
             }
+            boolCalculationActive = false;
+            Log.d(DEBUG_TAG, "Matrix calculations finished.");
         }
-        Log.d(DEBUG_TAG, "Matrix calculations finished.");
+        catch (Exception ex)
+        {
+            Log.d(DEBUG_TAG, "Exception thrown while calculating matrix:" + ex.getMessage());
+        }
     }
 
     // Return true if the lines that will need to refer to this line have been calculated.
