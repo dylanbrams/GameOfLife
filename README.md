@@ -1,6 +1,14 @@
 # GameOfLife
 
-This is an implementation of Conway's Game of Life simulation.
+This is an implementation of Conway's Game of Life simulation.  
+
+It demonstrates that I AM NOT A JAVA PROGRAMMER.  After watching some videos on Android
+programming I noted that there are apparently some memory leaks in the code, as well as
+various issues with how I manage the garbage collector.  The monkeying around
+I did to speed things up in the processing algorithm consumed quite a bit of memory because
+I can't force fast collection and reuse of the individual matrix lines.  The way to fix
+this is to rewrite the algorithmic part in native code.  Or allocate two matricies and swap between
+them. Or consign this bit of code to the compost heap of historical code I've written.
 
 It takes the screen size available to it and fills it with 1/3 live pixels, based upon a
 user-input random number.  It then calculates the next tick repeatedly.
