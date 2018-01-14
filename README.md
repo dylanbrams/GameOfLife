@@ -6,7 +6,7 @@ It demonstrates that I AM NOT A JAVA PROGRAMMER.  After watching some videos on 
 programming I noted that there are apparently some memory leaks in the code, as well as
 various issues with how I manage the garbage collector.  The monkeying around
 I did to speed things up in the processing algorithm consumed quite a bit of memory because
-I can't force fast collection and reuse of the individual matrix lines.  The way to fix
+I can't force fast collection and reuse of the individual matrix line memory.  The way to fix
 this is to rewrite the algorithmic part in native code.  Or allocate two matricies and swap between
 them. Or consign this bit of code to the compost heap of historical code I've written.
 
