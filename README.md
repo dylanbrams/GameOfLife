@@ -10,6 +10,13 @@ I can't force fast collection and reuse of the individual matrix line memory.  T
 this is to rewrite the algorithmic part in native code.  Or allocate two matricies and swap between
 them. Or consign this bit of code to the compost heap of historical code I've written.
 
+Also note: I'd like to implement the algorithm in here: 
+http://www.jagregory.com/abrash-black-book/#the-triumph-of-algorithmic-optimization-in-a-cellular-automata-game
+It would go significantly faster.  The problem, of course, is that the threading combined with
+maintenance of the change list might lead to more memory leaks. I don't know, I'd need to try it.
+Still, this demo is a demo that I can code and create a program, start to end, that compiles and runs
+on my Android device.
+
 It takes the screen size available to it and fills it with 1/3 live pixels, based upon a
 user-input random number.  It then calculates the next tick repeatedly.
 
